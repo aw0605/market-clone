@@ -9,14 +9,14 @@ const calcTime = (timestamp) => {
   if (hour > 0) return `${hour}시간 전`;
   else if (minute > 0) return `${minute}분 전`;
   else if (second >= 0) return `${second}초 전`;
-  else "방금 전";
+  else return "방금 전";
 
   return `${hour}시간 `;
 };
 
 const renderData = (data) => {
   const main = document.querySelector("main");
-  data.sort().forEach(async (obj) => {
+  data.reverse().forEach(async (obj) => {
     const div = document.createElement("div");
     div.className = "item-list";
 
