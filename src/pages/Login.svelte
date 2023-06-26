@@ -1,17 +1,51 @@
-<form id="login-form" action="/login" method="POST">
-    <div>로그인</div>
-    <div>
-      <label for="id">아이디</label>
-      <input type="text" id="id" name="id" required />
-    </div>
-    <div>
-      <label for="password">패스워드</label>
-      <input type="password" id="password" name="password" required />
-    </div>
-    <div>
-      <button type="submit">로그인</button>
-    </div>
-    <div id="info"></div>
-  </form>
+<script>
+    import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+  import { user$ } from "../store";
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
+    const provider = new GoogleAuthProvider();
+
+const auth = getAuth();
+
+const loginWithGoogle = async () => {
+    try{
+       const result = await signInWithPopup(auth, provider);
+       const credential = GoogleAuthProvider.credentialFromResult(result);
+       const token = credential.accessToken;
+       const user = result.user;
+       user$.set(user);
+       localStorage.setItem("token", token);
+    }catch(error){
+        console.error(error);
+    }
+};
+</script>
+
+<div>
+    <!-- {#if $user$}
+    <div>{$user$?.displayName} 로그임됨</div>
+    {/if} -->
+    <div>로그인하기</div>
+    <button class="login-btn" on:click={loginWithGoogle}>
+        <img src="https://w7.pngwing.com/pngs/869/485/png-transparent-google-logo-computer-icons-google-text-logo-google-logo-thumbnail.png" alt="google" class="google-img" />
+        <div>
+            Google로 시작하기
+        </div>
+    </button>
+</div>
+
+<style>
+    .login-btn{
+        width: 200px;
+        height: 50px;
+        border: 1px solid gray;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        cursor: pointer;
+    }
+    .google-img{
+        width: 20px;
+    }
+</style>
